@@ -1176,17 +1176,18 @@ int mips32_read_config_regs(struct target *target)
 			: mips32->isa_rel == MIPS32_RELEASE_6 ? "6"
 			: "unknown", mips32->isa_rel);
 
+	// TODO: Implement MIPS32 and MMIPS32 mode, fallback to MIPS32_ONLY for now
 	if (ejtag_info->impcode & EJTAG_IMP_MIPS16) {
-		mips32->isa_imp = MIPS32_MIPS16;
+		mips32->isa_imp = MIPS32_ONLY;
 		LOG_USER("ISA implemented: %s%s", "MIPS32, MIPS16", buf);
 	} else if (ejtag_info->config_regs >= 4) {	/* config3 implemented */
 		unsigned int isa_imp = (ejtag_info->config[3] & MIPS32_CONFIG3_ISA_MASK) >> MIPS32_CONFIG3_ISA_SHIFT;
 		if (isa_imp == 1) {
-			mips32->isa_imp = MMIPS32_ONLY;
+			mips32->isa_imp = MIPS32_ONLY;
 			LOG_USER("ISA implemented: %s%s", "microMIPS32", buf);
 
 		} else if (isa_imp != 0) {
-			mips32->isa_imp = MIPS32_MMIPS32;
+			mips32->isa_imp = MIPS32_ONLY;
 			LOG_USER("ISA implemented: %s%s", "MIPS32, microMIPS32", buf);
 		}
 	} else if (mips32->isa_imp == MIPS32_ONLY)	{
